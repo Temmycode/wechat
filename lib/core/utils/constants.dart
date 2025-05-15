@@ -1,1 +1,20 @@
-final chatTabs = ['All chats', 'Groups'];
+import 'package:wechat/core/utils/app_icons.dart';
+import 'package:wechat/features/call/presentation/screens/recent_call_screen.dart';
+import 'package:wechat/features/chat/presentation/screens/recent_chat_screen.dart';
+import 'package:wechat/features/profile/presentation/screens/profile_screen.dart';
+
+const chatTabs = ['All chats', 'Groups'];
+
+const settingsOptions = [
+  {'name': 'Dark mode', 'icon': AppIcons.moon},
+  {'name': 'Account', 'icon': AppIcons.person},
+  {'name': 'Notification', 'icon': AppIcons.bell},
+  {'name': 'Chat settings', 'icon': AppIcons.message},
+  {'name': 'Data and storage', 'icon': AppIcons.storage},
+  {'name': 'Privacy & security', 'icon': AppIcons.lock},
+  {'name': 'About', 'icon': AppIcons.info},
+];
+
+const pages = [RecentChatScreen(), RecentCallScreen(), ProfileScreen()];
+
+const navBarIcons = [AppIcons.message, AppIcons.callOut, AppIcons.personRound];

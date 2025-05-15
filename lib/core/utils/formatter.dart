@@ -5,8 +5,7 @@ class DateFormatter {
   /// Returns formats like:
   /// - "HH.mm" (e.g. "18.32") for times today
   /// - "yesterday" for yesterday
-  /// - "MM.dd" (e.g. "06.13") for dates in current year
-  /// - "yyyy.MM.dd" (e.g. "2023.06.13") for dates in previous years
+  /// - "Month d, HH.mm" (e.g. "July 14, 12.30") for any other date
   static String format(DateTime date) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -23,13 +22,8 @@ class DateFormatter {
       return 'yesterday';
     }
 
-    // If time is from current year but not today or yesterday, show MM.dd
-    if (date.year == now.year) {
-      return DateFormat('MM.dd').format(date);
-    }
-
-    // If time is from previous years, show yyyy.MM.dd
-    return DateFormat('yyyy.MM.dd').format(date);
+    // For any other date, show "Month d, HH.mm" format
+    return DateFormat("MMMM d, HH.mm").format(date);
   }
 
   /// Alternative format that allows customization of patterns
@@ -37,8 +31,7 @@ class DateFormatter {
     required DateTime date,
     String todayPattern = 'HH.mm',
     String yesterdayText = 'yesterday',
-    String thisYearPattern = 'MM.dd',
-    String otherYearPattern = 'yyyy.MM.dd',
+    String otherDaysPattern = 'MMMM d, HH.mm',
   }) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
@@ -53,10 +46,6 @@ class DateFormatter {
       return yesterdayText;
     }
 
-    if (date.year == now.year) {
-      return DateFormat(thisYearPattern).format(date);
-    }
-
-    return DateFormat(otherYearPattern).format(date);
+    return DateFormat(otherDaysPattern).format(date);
   }
 }

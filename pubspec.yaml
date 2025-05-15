@@ -43,6 +43,9 @@ dependencies:
   # render svg
   flutter_svg: ^2.1.0
 
+  # animation
+  flutter_animate: ^4.5.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

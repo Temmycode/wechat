@@ -5,8 +5,9 @@ import 'package:wechat/core/utils/size_config.dart';
 
 class UserAvatar extends StatelessWidget {
   final String imageUrl;
+  final double? size;
 
-  const UserAvatar({super.key, required this.imageUrl});
+  const UserAvatar({super.key, required this.imageUrl, this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +16,12 @@ class UserAvatar extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(context.r(48)),
           child: CachedNetworkImage(
-            height: context.h(48),
-            width: context.h(48),
+            height: context.h(size ?? 48),
+            width: context.h(size ?? 48),
             fit: BoxFit.cover,
             imageUrl: imageUrl,
             errorWidget: (context, url, error) => Icon(Icons.error),
-            placeholder: (context, url) => Container(color: AppColors.grey200),
+            placeholder: (context, url) => Container(color: AppColors.grey100),
           ),
         ),
 
@@ -33,7 +34,7 @@ class UserAvatar extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.yellow400,
-              border: Border.all(width: 3, color: Colors.white),
+              border: Border.all(width: 2.2, color: Colors.white),
             ),
           ),
         ),

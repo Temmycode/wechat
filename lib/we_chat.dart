@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wechat/features/chat/presentation/screens/recent_chat_screen.dart';
+import 'package:wechat/features/home/presentation/screens/home_screen.dart';
 
 class WeChat extends StatelessWidget {
   const WeChat({super.key});
@@ -14,7 +14,7 @@ class WeChat extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(backgroundColor: Colors.white),
       ),
-      home: RecentChatScreen(),
+      home: HomeScreen(),
     );
   }
 }

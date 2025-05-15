@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
+import 'package:wechat/config/theme/app_colors.dart';
+import 'package:wechat/core/utils/app_icons.dart';
+import 'package:wechat/core/utils/extensions.dart';
+import 'package:wechat/core/utils/size_config.dart';
+import 'package:wechat/core/widgets/app_button.dart';
+import 'package:wechat/features/chat/presentation/widgets/chat_block.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -11,51 +15,83 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late final TextEditingController _messageController;
-  late final WebSocketChannel _channel;
 
   @override
   void initState() {
     super.initState();
     _messageController = TextEditingController();
-    _initializeWebsocket();
-  }
-
-  void _initializeWebsocket() async {
-    final wsUrl = Uri.parse('ws/localhost:8000/ws/1');
-    _channel = WebSocketChannel.connect(wsUrl);
-
-    await _channel.ready;
-
-    _channel.stream.listen((message) {
-      _channel.sink.add('received!');
-      _channel.sink.close(status.goingAway);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      backgroundColor: AppColors.offWhite,
+      body: Stack(
         children: [
-          StreamBuilder(
-            stream: _channel.stream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return Center(child: Icon(Icons.error, color: Colors.red));
-                } else if (snapshot.hasData) {
-                  return Text(snapshot.data);
-                } else {
-                  return Text("Something sup1");
-                }
-              } else {
-                return Text("Something sup2");
-              }
-            },
+          Positioned(
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return ChatBlock(isUser: true, message: "Hello world");
+              },
+            ),
           ),
-          TextField(controller: _messageController),
+          Positioned(
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: AppColors.grey100)),
+              ),
+              child: Row(
+                children: [
+                  // Emoji select screen
+                  AppButton(
+                    onPressed: () {},
+                    child: AppIcons.emoji.toSvg(
+                      height: context.h(24),
+                      width: context.h(24),
+                    ),
+                  ),
+
+                  context.sbW(16),
+
+                  // Text Area
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(border: InputBorder.none),
+                    ),
+                  ),
+
+                  // Add a file
+                  AppButton(
+                    onPressed: () {},
+                    child: AppIcons.attach.toSvg(
+                      height: context.h(24),
+                      width: context.h(24),
+                    ),
+                  ),
+
+                  context.sbW(16),
+
+                  // Record Voice Note
+                  AppButton(
+                    onPressed: () {},
+                    child: Container(
+                      padding: EdgeInsets.all(context.sp(8)),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.blue800,
+                      ),
+                      child: AppIcons.voiceNote.toSvg(
+                        height: context.h(24),
+                        width: context.h(24),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -63,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    super.dispose();
     _messageController.dispose();
+    super.dispose();
   }
 }

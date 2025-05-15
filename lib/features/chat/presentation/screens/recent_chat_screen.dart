@@ -17,17 +17,24 @@ class RecentChatScreen extends StatefulWidget {
 }
 
 class _RecentChatScreenState extends State<RecentChatScreen>
-    with SingleTickerProviderStateMixin {
-  late final ValueNotifier<TabController> _tabController;
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  late final TabController _tabController;
+  late final ValueNotifier<int> _tabIndex;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this).notifier;
+    _tabController = TabController(length: 2, vsync: this);
+    _tabIndex = _tabController.index.notifier;
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       backgroundColor: AppColors.offWhite,
       body: SafeArea(
@@ -52,9 +59,12 @@ class _RecentChatScreenState extends State<RecentChatScreen>
                         color: AppColors.black800,
                       ),
                     ),
-                    AppIcons.search.toSvg(
-                      height: context.h(24),
-                      width: context.h(24),
+                    AppButton(
+                      onPressed: () {},
+                      child: AppIcons.search.toSvg(
+                        height: context.h(24),
+                        width: context.h(24),
+                      ),
                     ),
                   ],
                 ),
@@ -66,17 +76,19 @@ class _RecentChatScreenState extends State<RecentChatScreen>
                 preferredSize: Size(double.infinity, context.h(30)),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: context.w(16)),
-                  child: _tabController.sync(
-                    builder: (context, controller, child) {
+                  child: _tabIndex.sync(
+                    builder: (context, value, _) {
                       return Row(
                         children: List.generate(chatTabs.length, (index) {
                           final tab = chatTabs[index];
                           return ChatTab(
-                            isActive: index == controller.index,
+                            key: ValueKey(index),
+                            isActive: index == value,
                             text: tab,
                             onPressed: () {
+                              _tabController.animateTo(index);
                               // change to the currently pressed tab
-                              controller.index = index;
+                              _tabIndex.value = _tabController.index;
                             },
                           );
                         }),
@@ -98,7 +110,7 @@ class _RecentChatScreenState extends State<RecentChatScreen>
               sliver: SliverList.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return ConversationListTile();
+                  return ConversationListTile(key: ValueKey(index));
                 },
               ),
             ),
@@ -115,7 +127,7 @@ class _RecentChatScreenState extends State<RecentChatScreen>
             shape: BoxShape.circle,
             color: AppColors.blue800,
           ),
-          child: AppIcons.message.toSvg(),
+          child: AppIcons.addMessage.toSvg(),
         ),
       ),
     );
