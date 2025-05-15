@@ -10,6 +10,7 @@ import 'package:wechat/features/chat/presentation/widgets/chat_tab.dart';
 import 'package:wechat/features/chat/presentation/widgets/conversation_list_tile.dart';
 
 class RecentChatScreen extends StatefulWidget {
+  static const String routeName = "/conversation";
   const RecentChatScreen({super.key});
 
   @override
@@ -73,7 +74,7 @@ class _RecentChatScreenState extends State<RecentChatScreen>
               pinned: false,
               snap: true,
               bottom: PreferredSize(
-                preferredSize: Size(double.infinity, context.h(30)),
+                preferredSize: Size(double.infinity, context.h(40)),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: context.w(16)),
                   child: _tabIndex.sync(
@@ -103,7 +104,7 @@ class _RecentChatScreenState extends State<RecentChatScreen>
             SliverPadding(
               padding: EdgeInsets.fromLTRB(
                 context.w(8),
-                context.h(0),
+                context.h(8),
                 context.w(8),
                 0,
               ),

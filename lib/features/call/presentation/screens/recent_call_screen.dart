@@ -8,6 +8,7 @@ import 'package:wechat/core/widgets/app_text.dart';
 import 'package:wechat/features/call/presentation/widgets/call_list_tile.dart';
 
 class RecentCallScreen extends StatefulWidget {
+  static const String routeName = "/call-list";
   const RecentCallScreen({super.key});
 
   @override

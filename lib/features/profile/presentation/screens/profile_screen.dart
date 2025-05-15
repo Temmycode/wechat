@@ -9,6 +9,8 @@ import 'package:wechat/core/widgets/app_text.dart';
 import 'package:wechat/features/profile/presentation/widgets/settings_options.dart';
 
 class ProfileScreen extends StatelessWidget {
+  static const String routeName = "/profile";
+
   const ProfileScreen({super.key});
 
   @override
