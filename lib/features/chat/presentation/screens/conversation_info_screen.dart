@@ -42,13 +42,6 @@ class _ConversationInfoScreenState extends State<ConversationInfoScreen>
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // CachedNetworkImage(
-              //   imageUrl:
-              //       'https://m.media-amazon.com/images/I/71LEWdTTxpL._AC_SL1280_.jpg',
-              //   fit: BoxFit.cover,
-              //   height: context.h(166),
-              //   width: double.infinity,
-              // ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: context.w(16)),
                 child: Row(

@@ -47,6 +47,12 @@ dependencies:
   flutter_animate: ^4.5.2
   rive: ^0.13.20
 
+  # dart classes equality
+  equatable: ^2.0.7
+
+  # local storage
+  shared_preferences: ^2.5.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
