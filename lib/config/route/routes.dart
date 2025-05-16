@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wechat/features/call/presentation/screens/recent_call_screen.dart';
 import 'package:wechat/features/chat/presentation/screens/chat_screen.dart';
+import 'package:wechat/features/chat/presentation/screens/conversation_info_screen.dart';
 import 'package:wechat/features/chat/presentation/screens/recent_chat_screen.dart';
 import 'package:wechat/features/home/presentation/screens/home_screen.dart';
 import 'package:wechat/features/profile/presentation/screens/profile_screen.dart';
@@ -10,6 +11,7 @@ class AppRouter {
     RecentChatScreen.routeName: (_) => const RecentChatScreen(),
     RecentCallScreen.routeName: (_) => const RecentCallScreen(),
     ChatScreen.routeName: (_) => const ChatScreen(),
+    ConversationInfoScreen.routeName: (_) => const ConversationInfoScreen(),
     ProfileScreen.routeName: (_) => const ProfileScreen(),
   };
 
@@ -27,6 +29,10 @@ class AppRouter {
         );
       case ChatScreen.routeName:
         return MaterialPageRoute(builder: (context) => const ChatScreen());
+      case ConversationInfoScreen.routeName:
+        return MaterialPageRoute(
+          builder: (context) => const ConversationInfoScreen(),
+        );
       case ProfileScreen.routeName:
         return MaterialPageRoute(builder: (context) => const ProfileScreen());
       default:

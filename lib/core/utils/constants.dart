@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:wechat/core/utils/app_icons.dart';
 import 'package:wechat/features/call/presentation/screens/recent_call_screen.dart';
 import 'package:wechat/features/chat/presentation/screens/recent_chat_screen.dart';
@@ -17,4 +18,11 @@ const settingsOptions = [
 
 const pages = [RecentChatScreen(), RecentCallScreen(), ProfileScreen()];
 
-const navBarIcons = [AppIcons.message, AppIcons.callOut, AppIcons.personRound];
+const navBarIcons = ["CHAT", "AUDIO", "USER"];
+
+const conversationInfoTabItems = [
+  {'name': 'Bookmarks', 'icons': CupertinoIcons.star},
+  {'name': 'Images', 'icons': CupertinoIcons.photo},
+  {'name': 'Videos', 'icons': CupertinoIcons.video_camera},
+  {'name': 'Documents', 'icons': CupertinoIcons.doc},
+];

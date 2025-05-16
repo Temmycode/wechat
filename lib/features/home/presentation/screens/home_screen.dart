@@ -40,12 +40,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     navigationIndexProvider.value = index;
                   },
-                  child: icon.toSvg(
-                    height: context.h(24),
-                    width: context.h(24),
-                    color:
-                        value == index ? AppColors.blue800 : AppColors.grey500,
-                  ),
+                  icon: icon,
                 );
               },
             );

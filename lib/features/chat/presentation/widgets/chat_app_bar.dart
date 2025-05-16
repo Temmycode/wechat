@@ -6,6 +6,7 @@ import 'package:wechat/core/utils/extensions.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
+import 'package:wechat/features/chat/presentation/screens/conversation_info_screen.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
@@ -42,42 +43,51 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           context.sbW(8),
 
-          ClipRRect(
-            borderRadius: BorderRadius.circular(context.r(48)),
-            child: CachedNetworkImage(
-              height: context.w(48),
-              width: context.w(48),
-              fit: BoxFit.cover,
-              imageUrl: imageUrl,
-              errorWidget: (context, url, error) => Icon(Icons.error),
-              placeholder:
-                  (context, url) => Container(color: AppColors.grey100),
+          AppButton(
+            onPressed: () {
+              Navigator.pushNamed(context, ConversationInfoScreen.routeName);
+            },
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(context.r(48)),
+                  child: CachedNetworkImage(
+                    height: context.w(48),
+                    width: context.w(48),
+                    fit: BoxFit.cover,
+                    imageUrl: imageUrl,
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    placeholder:
+                        (context, url) => Container(color: AppColors.grey100),
+                  ),
+                ),
+
+                context.sbW(10),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppText(
+                      name,
+                      style: TextStyle(
+                        fontSize: context.sp(18),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.black800,
+                      ),
+                    ),
+                    context.sbH(2),
+                    AppText(
+                      "Online",
+                      style: TextStyle(
+                        fontSize: context.sp(12),
+                        color: AppColors.grey600,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
-
-          context.sbW(10),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AppText(
-                name,
-                style: TextStyle(
-                  fontSize: context.sp(18),
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.black800,
-                ),
-              ),
-              context.sbH(2),
-              AppText(
-                "Online",
-                style: TextStyle(
-                  fontSize: context.sp(12),
-                  color: AppColors.grey600,
-                ),
-              ),
-            ],
           ),
 
           Spacer(),
