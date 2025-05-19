@@ -7,6 +7,8 @@ import 'package:wechat/features/home/presentation/providers/navigation_index_pro
 import 'package:wechat/features/home/presentation/widgets/navigation_bar_button.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const String routeName = '/home';
+
   const HomeScreen({super.key});
 
   @override

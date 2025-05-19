@@ -1,27 +1,44 @@
 import 'package:dio/dio.dart';
 import 'package:wechat/core/resources/auth_interceptor.dart';
 import 'package:wechat/core/resources/token_manager.dart';
-import 'package:wechat/features/auth/models/user.dart';
 
 class ApiClient {
   late final Dio dio;
   late final TokenManager tokenManager;
 
-  constApiClient() {
+  ApiClient() {
     dio = Dio(
-      BaseOptions(baseUrl: 'localhost:8000', contentType: 'application/json'),
+      BaseOptions(
+        baseUrl: 'http://127.0.0.1:8000',
+        contentType: 'application/json',
+        validateStatus: (status) => status! < 500,
+      ),
     );
 
     tokenManager = TokenManager(dio: dio);
 
+    // Add interceptor after initialization
+    dio.interceptors.clear();
     dio.interceptors.add(AuthInterceptor(tokenManager: tokenManager, dio: dio));
   }
 
-  Future<Response> login(String email, String password) async {
-    return await dio.post('/login');
+  Future<Response> login(FormData data) async {
+    return await dio.post('/login', data: data);
   }
 
-  Future<Response> register(UserModel user) async {
-    return await dio.post('/register');
+  Future<Response> register(Map<String, dynamic> data) async {
+    return await dio.post('/register', data: data);
+  }
+
+  Future<Response> updateUserProfile(Map<String, dynamic> data) async {
+    return await dio.post('/user/update', data: data);
+  }
+
+  Future<Response> updateUserProfilePicture(Map<String, dynamic> data) async {
+    return await dio.post('/register', data: data);
+  }
+
+  Future<Response> getAllConversations() async {
+    return await dio.get('/conversation');
   }
 }

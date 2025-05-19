@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wechat/core/utils/app_icons.dart';
 import 'package:wechat/features/call/presentation/screens/recent_call_screen.dart';
-import 'package:wechat/features/chat/presentation/screens/recent_chat_screen.dart';
-import 'package:wechat/features/profile/presentation/screens/profile_screen.dart';
+import 'package:wechat/features/chat/screens/recent_chat_screen.dart';
+import 'package:wechat/features/profile/views/profile_screen.dart';
 
 const chatTabs = ['All chats', 'Groups'];
 

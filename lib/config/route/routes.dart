@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:wechat/features/auth/views/create_account_screen.dart';
+import 'package:wechat/features/auth/views/login_screen.dart';
 import 'package:wechat/features/call/presentation/screens/recent_call_screen.dart';
-import 'package:wechat/features/chat/presentation/screens/chat_screen.dart';
-import 'package:wechat/features/chat/presentation/screens/conversation_info_screen.dart';
-import 'package:wechat/features/chat/presentation/screens/recent_chat_screen.dart';
+import 'package:wechat/features/chat/screens/chat_screen.dart';
+import 'package:wechat/features/chat/screens/conversation_info_screen.dart';
+import 'package:wechat/features/chat/screens/recent_chat_screen.dart';
 import 'package:wechat/features/home/presentation/screens/home_screen.dart';
-import 'package:wechat/features/profile/presentation/screens/profile_screen.dart';
+import 'package:wechat/features/profile/views/profile_screen.dart';
 
 class AppRouter {
   static final routes = {
@@ -13,6 +15,9 @@ class AppRouter {
     ChatScreen.routeName: (_) => const ChatScreen(),
     ConversationInfoScreen.routeName: (_) => const ConversationInfoScreen(),
     ProfileScreen.routeName: (_) => const ProfileScreen(),
+    HomeScreen.routeName: (_) => const HomeScreen(),
+    LoginScreen.routeName: (_) => const LoginScreen(),
+    CreateAccountScreen.routeName: (_) => const CreateAccountScreen(),
   };
 
   static Route<dynamic> generateRoutes(RouteSettings routeSettings) {
@@ -35,6 +40,14 @@ class AppRouter {
         );
       case ProfileScreen.routeName:
         return MaterialPageRoute(builder: (context) => const ProfileScreen());
+      case HomeScreen.routeName:
+        return MaterialPageRoute(builder: (context) => const HomeScreen());
+      case LoginScreen.routeName:
+        return MaterialPageRoute(builder: (context) => const LoginScreen());
+      case CreateAccountScreen.routeName:
+        return MaterialPageRoute(
+          builder: (context) => const CreateAccountScreen(),
+        );
       default:
         return MaterialPageRoute(builder: (context) => const HomeScreen());
     }

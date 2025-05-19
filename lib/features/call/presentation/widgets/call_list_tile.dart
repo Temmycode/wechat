@@ -6,7 +6,7 @@ import 'package:wechat/core/utils/formatter.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
-import 'package:wechat/features/chat/presentation/widgets/user_avatar.dart';
+import 'package:wechat/features/chat/widgets/user_avatar.dart';
 
 class CallListTile extends StatelessWidget {
   const CallListTile({super.key});

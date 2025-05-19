@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wechat/features/auth/models/user.dart';
 
-class PrefrenceManager {
+class PreferenceManager {
   static late final SharedPreferences _prefs;
 
   static void setAccessToken(String value) {
@@ -21,5 +22,17 @@ class PrefrenceManager {
 
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
+  }
+
+  static void setUser(String user) {
+    _prefs.setString("user", user);
+  }
+
+  static UserModel? getUser() {
+    final cachedUser = _prefs.getString("user");
+    if (cachedUser == null) {
+      return null;
+    }
+    return UserModel.fromJson(cachedUser);
   }
 }

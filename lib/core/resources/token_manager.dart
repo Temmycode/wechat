@@ -8,19 +8,19 @@ class TokenManager {
   const TokenManager({required this.dio});
 
   String? getAccessToken() {
-    return PrefrenceManager.getAccessToken();
+    return PreferenceManager.getAccessToken();
   }
 
   String? getRefreshToken() {
-    return PrefrenceManager.getAccessToken();
+    return PreferenceManager.getAccessToken();
   }
 
   void saveTokens({
     required String accessToken,
     required String refreshToken,
   }) async {
-    PrefrenceManager.setAccessToken(accessToken);
-    PrefrenceManager.setRefreshToken(refreshToken);
+    PreferenceManager.setAccessToken(accessToken);
+    PreferenceManager.setRefreshToken(refreshToken);
   }
 
   Future<bool> refreshTokens() async {
@@ -33,7 +33,7 @@ class TokenManager {
       );
 
       if (response.statusCode == 200) {
-        PrefrenceManager.setAccessToken(response.data['access_token']);
+        PreferenceManager.setAccessToken(response.data['access_token']);
         return true;
       }
 
