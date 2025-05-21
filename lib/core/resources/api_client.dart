@@ -41,4 +41,12 @@ class ApiClient {
   Future<Response> getAllConversations() async {
     return await dio.get('/conversation');
   }
+
+  Future<Response> startConversation(Map<String, dynamic> data) async {
+    return await dio.post('/conversation/', data: data);
+  }
+
+  Future<Response> getAllContactsAsWechatUsers(data) async {
+    return await dio.post('/wechat-users', data: data);
+  }
 }

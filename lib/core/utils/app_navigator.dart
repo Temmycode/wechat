@@ -94,4 +94,28 @@ class AppNavigator {
       (route) => false,
     );
   }
+
+  Future<void> navigateWithTransition({required Widget route}) async {
+    await navigatorKey.currentState!.push(
+      PageRouteBuilder(
+        transitionDuration: 800.ms,
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return route;
+        },
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final curvedAnimation = CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastLinearToSlowEaseIn,
+          );
+
+          final slideAnimation = Tween<Offset>(
+            begin: const Offset(0, 1),
+            end: const Offset(0, 0),
+          ).animate(curvedAnimation);
+
+          return SlideTransition(position: slideAnimation, child: child);
+        },
+      ),
+    );
+  }
 }

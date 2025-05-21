@@ -334,6 +334,7 @@ class _CreateAccountScreenState extends ConsumerState<CreateAccountScreen>
             context.sbW(16),
             Expanded(
               child: PrimaryButton(
+                isLoading: ref.watch(authNotifierProvider).isLoading,
                 onTap: _handleSignUp,
                 text: "Create Account",
               ),

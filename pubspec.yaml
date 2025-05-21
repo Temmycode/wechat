@@ -53,6 +53,13 @@ dependencies:
   # local storage
   shared_preferences: ^2.5.3
 
+  # retreive contacts
+  contacts_service: ^0.6.3
+  flutter_contacts: ^1.1.9+2
+
+  # device info
+  device_info_plus: ^11.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

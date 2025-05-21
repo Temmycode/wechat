@@ -5,6 +5,7 @@ import 'package:wechat/features/call/presentation/screens/recent_call_screen.dar
 import 'package:wechat/features/chat/screens/chat_screen.dart';
 import 'package:wechat/features/chat/screens/conversation_info_screen.dart';
 import 'package:wechat/features/chat/screens/recent_chat_screen.dart';
+import 'package:wechat/features/chat/screens/select_contact_screen.dart';
 import 'package:wechat/features/home/presentation/screens/home_screen.dart';
 import 'package:wechat/features/profile/views/profile_screen.dart';
 
@@ -18,6 +19,7 @@ class AppRouter {
     HomeScreen.routeName: (_) => const HomeScreen(),
     LoginScreen.routeName: (_) => const LoginScreen(),
     CreateAccountScreen.routeName: (_) => const CreateAccountScreen(),
+    SelectContactScreen.routeName: (_) => const SelectContactScreen(),
   };
 
   static Route<dynamic> generateRoutes(RouteSettings routeSettings) {
@@ -47,6 +49,10 @@ class AppRouter {
       case CreateAccountScreen.routeName:
         return MaterialPageRoute(
           builder: (context) => const CreateAccountScreen(),
+        );
+      case SelectContactScreen.routeName:
+        return MaterialPageRoute(
+          builder: (context) => const SelectContactScreen(),
         );
       default:
         return MaterialPageRoute(builder: (context) => const HomeScreen());

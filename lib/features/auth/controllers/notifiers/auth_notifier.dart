@@ -6,6 +6,7 @@ import 'package:wechat/core/utils/app_navigator.dart';
 import 'package:wechat/core/utils/prefrence_manager.dart';
 import 'package:wechat/features/auth/models/auth_state.dart';
 import 'package:wechat/features/auth/models/user.dart';
+import 'package:wechat/features/auth/views/login_screen.dart';
 import 'package:wechat/features/home/presentation/screens/home_screen.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
@@ -30,7 +31,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final data = response.data;
 
       if (response.statusCode == 200) {
-        
         AppNavigator.instance.navigateToPage(routeName: HomeScreen.routeName);
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
@@ -60,7 +60,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final data = response.data;
 
       if (response.statusCode == 201) {
-        AppNavigator.instance.goBack();
+        AppNavigator.instance.pushAndRemoveUnitlWithTransition(
+          route: LoginScreen(),
+        );
       } else {
         final errorMessage =
             data['message'] ?? 'An error occurred during registration';

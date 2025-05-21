@@ -6,12 +6,14 @@ import 'package:wechat/core/utils/size_config.dart';
 class UserAvatar extends StatelessWidget {
   final String? imageUrl;
   final double? size;
+  final bool withBanner;
   final bool isNetwork;
 
   const UserAvatar({
     super.key,
     this.imageUrl,
     this.size,
+    this.withBanner = true,
     this.isNetwork = true,
   });
 
@@ -21,7 +23,7 @@ class UserAvatar extends StatelessWidget {
       children: [
         isNetwork
             ? ClipRRect(
-              borderRadius: BorderRadius.circular(context.r(48)),
+              borderRadius: BorderRadius.circular(context.r(size ?? 48)),
               child: CachedNetworkImage(
                 height: context.h(size ?? 48),
                 width: context.h(size ?? 48),
@@ -42,7 +44,7 @@ class UserAvatar extends StatelessWidget {
           right: 0,
           bottom: 0,
           child:
-              isNetwork
+              isNetwork && withBanner
                   ? Container(
                     height: context.h(12),
                     width: context.h(12),
