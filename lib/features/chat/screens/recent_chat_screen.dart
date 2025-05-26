@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wechat/config/theme/app_colors.dart';
+import 'package:wechat/core/resources/api_client.dart';
 import 'package:wechat/core/utils/app_icons.dart';
 import 'package:wechat/core/utils/app_navigator.dart';
 import 'package:wechat/core/utils/constants.dart';
@@ -8,20 +9,22 @@ import 'package:wechat/core/utils/extensions.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
+import 'package:wechat/features/chat/controller/notifiers/chat_notifier.dart';
+import 'package:wechat/features/chat/controller/providers/all_conversations_provider.dart';
 import 'package:wechat/features/chat/controller/providers/chat_notifier_provider.dart';
 import 'package:wechat/features/chat/screens/select_contact_screen.dart';
 import 'package:wechat/features/chat/widgets/chat_tab.dart';
 import 'package:wechat/features/chat/widgets/conversation_list_tile.dart';
 
-class RecentChatScreen extends StatefulWidget {
+class RecentChatScreen extends ConsumerStatefulWidget {
   static const String routeName = "/conversation";
   const RecentChatScreen({super.key});
 
   @override
-  State<RecentChatScreen> createState() => _RecentChatScreenState();
+  ConsumerState<RecentChatScreen> createState() => _RecentChatScreenState();
 }
 
-class _RecentChatScreenState extends State<RecentChatScreen>
+class _RecentChatScreenState extends ConsumerState<RecentChatScreen>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late final TabController _tabController;
   late final ValueNotifier<int> _tabIndex;
@@ -39,6 +42,7 @@ class _RecentChatScreenState extends State<RecentChatScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final asyncConversations = ref.watch(allConversationsProvider);
 
     return Scaffold(
       backgroundColor: AppColors.offWhite,
@@ -113,23 +117,8 @@ class _RecentChatScreenState extends State<RecentChatScreen>
                 context.w(8),
                 0,
               ),
-              sliver: Consumer(
-                builder: (context, ref, _) {
-                  final chatProvider = ref.watch(chatNotifierProvider);
-                  final conversations = chatProvider.allConversations;
-
-                  if (chatProvider.isLoading) {
-                    return SliverToBoxAdapter(
-                      child:
-                          CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                            strokeWidth: 2,
-                          ).center(),
-                    );
-                  }
-
+              sliver: asyncConversations.when(
+                data: (conversations) {
                   if (conversations.isEmpty) {
                     return SliverToBoxAdapter(
                       child: AppText("No conversations yet!"),
@@ -137,12 +126,31 @@ class _RecentChatScreenState extends State<RecentChatScreen>
                   }
 
                   return SliverList.builder(
-                    itemCount: chatProvider.allConversations.length,
+                    itemCount: conversations.length,
                     itemBuilder: (context, index) {
                       final currentConversation = conversations[index];
 
-                      return ConversationListTile(key: ValueKey(index));
+                      return ConversationListTile(
+                        key: ValueKey(index),
+                        conversation: currentConversation,
+                      );
                     },
+                  );
+                },
+                error: (err, stk) {
+                  return SliverToBoxAdapter(
+                    child: AppText("An Error Occurred: $err"),
+                  );
+                },
+                loading: () {
+                  return SliverToBoxAdapter(
+                    child:
+                        CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.blue800,
+                          ),
+                          strokeWidth: 2,
+                        ).center(),
                   );
                 },
               ),

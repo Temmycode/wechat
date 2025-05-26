@@ -7,10 +7,11 @@ import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
 import 'package:wechat/features/chat/screens/conversation_info_screen.dart';
+import 'package:wechat/features/chat/widgets/user_avatar.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
-  final String imageUrl;
+  final String? imageUrl;
   final String name;
 
   const ChatAppBar({
@@ -49,18 +50,26 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
             },
             child: Row(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(context.r(48)),
-                  child: CachedNetworkImage(
-                    height: context.w(48),
-                    width: context.w(48),
-                    fit: BoxFit.cover,
-                    imageUrl: imageUrl,
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                    placeholder:
-                        (context, url) => Container(color: AppColors.grey100),
+                if (imageUrl == null || imageUrl!.isEmpty)
+                  UserAvatar(
+                    size: 48,
+                    isNetwork: false,
+                    withBanner: false,
+                    backgroundColor: AppColors.blue200,
+                  )
+                else
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(context.r(48)),
+                    child: CachedNetworkImage(
+                      height: context.w(48),
+                      width: context.w(48),
+                      fit: BoxFit.cover,
+                      imageUrl: imageUrl!,
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      placeholder:
+                          (context, url) => Container(color: AppColors.grey100),
+                    ),
                   ),
-                ),
 
                 context.sbW(10),
 

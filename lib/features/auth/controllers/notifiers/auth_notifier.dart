@@ -35,6 +35,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
         final user = UserModel.fromMap(data['user']).toJson();
+        debugPrint(user.toString());
 
         PreferenceManager.setAccessToken(accessToken);
         PreferenceManager.setRefreshToken(refreshToken);

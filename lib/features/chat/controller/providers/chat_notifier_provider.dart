@@ -4,5 +4,5 @@ import 'package:wechat/features/chat/controller/notifiers/chat_notifier.dart';
 import 'package:wechat/features/chat/models/chat_state.dart';
 
 final chatNotifierProvider = StateNotifierProvider<ChatNotifier, ChatState>(
-  (_) => ChatNotifier(ApiClient()),
+  (ref) => ChatNotifier(ApiClient(), ref),
 );

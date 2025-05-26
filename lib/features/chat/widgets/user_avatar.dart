@@ -5,14 +5,16 @@ import 'package:wechat/core/utils/size_config.dart';
 
 class UserAvatar extends StatelessWidget {
   final String? imageUrl;
-  final double? size;
+  final double size;
   final bool withBanner;
   final bool isNetwork;
+  final Color? backgroundColor;
 
   const UserAvatar({
     super.key,
     this.imageUrl,
-    this.size,
+    this.size = 48,
+    this.backgroundColor = Colors.white,
     this.withBanner = true,
     this.isNetwork = true,
   });
@@ -23,10 +25,10 @@ class UserAvatar extends StatelessWidget {
       children: [
         isNetwork
             ? ClipRRect(
-              borderRadius: BorderRadius.circular(context.r(size ?? 48)),
+              borderRadius: BorderRadius.circular(context.r(48)),
               child: CachedNetworkImage(
-                height: context.h(size ?? 48),
-                width: context.h(size ?? 48),
+                height: context.h(size),
+                width: context.h(size),
                 fit: BoxFit.cover,
                 imageUrl: imageUrl!,
                 errorWidget: (context, url, error) => Icon(Icons.error),
@@ -35,9 +37,9 @@ class UserAvatar extends StatelessWidget {
               ),
             )
             : CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: context.r(30),
-              child: Icon(Icons.person_outline, size: context.sp(40)),
+              backgroundColor: backgroundColor,
+              radius: context.r(size / 2),
+              child: Icon(Icons.person_outline, size: context.sp(size / 2)),
             ),
 
         Positioned(

@@ -10,6 +10,7 @@ class UserModel extends Equatable {
   final String? phoneNumber;
   final String? firstName;
   final String? lastName;
+  final String? mantra;
   final String? imageUrl;
   final String? password;
   final EquatableDateTime? dateOfBirth;
@@ -21,6 +22,7 @@ class UserModel extends Equatable {
     this.phoneNumber,
     this.firstName,
     this.lastName,
+    this.mantra,
     this.imageUrl,
     this.password,
     this.dateOfBirth,
@@ -34,6 +36,8 @@ class UserModel extends Equatable {
     phoneNumber,
     firstName,
     lastName,
+    mantra,
+    password,
     imageUrl,
     dateOfBirth,
   ];
@@ -41,12 +45,13 @@ class UserModel extends Equatable {
   factory UserModel.fromMap(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] is int ? json['id'] : null,
-      username: json['username'] ?? "",
-      email: json['email'] ?? "",
-      phoneNumber: json['phone_number'] ?? "",
-      firstName: json['first_name'] ?? "",
-      lastName: json['last_name'] ?? "",
-      imageUrl: json['image_url'] ?? "",
+      username: json['username'],
+      email: json['email'],
+      phoneNumber: json['phone_number'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      mantra: json['mantra'],
+      imageUrl: json['image_url'],
       password: null,
       dateOfBirth:
           json['date_of_birth'] != null
@@ -59,12 +64,14 @@ class UserModel extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'username': username,
       'email': email,
       'phone_number': phoneNumber,
       'first_name': firstName,
       'last_name': lastName,
       'image_url': imageUrl,
+      'mantra': mantra,
       'password': password,
       'date_of_birth': dateOfBirth?.toIso8601String(),
     };

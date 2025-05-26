@@ -4,6 +4,7 @@ import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
+import 'package:wechat/features/auth/models/user.dart';
 import 'package:wechat/features/chat/controller/providers/chat_notifier_provider.dart';
 import 'package:wechat/features/chat/widgets/contact_tile.dart';
 
@@ -11,6 +12,11 @@ class SelectContactScreen extends ConsumerWidget {
   static const String routeName = '/select-contact';
 
   const SelectContactScreen({super.key});
+
+  void startConversation(WidgetRef ref, UserModel user) {
+    ref.read(chatNotifierProvider.notifier).startConverstaion(user: user);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final applicationUsers = ref.watch(chatNotifierProvider).contactUsers;
@@ -44,7 +50,12 @@ class SelectContactScreen extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: applicationUsers.length,
                 itemBuilder: (context, index) {
-                  return ContactTile();
+                  final user = applicationUsers[index];
+
+                  return ContactTile(
+                    onPressed: () => startConversation(ref, user),
+                    user: user,
+                  );
                 },
               ),
           ],

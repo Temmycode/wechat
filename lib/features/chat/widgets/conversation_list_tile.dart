@@ -1,14 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/formatter.dart';
+import 'package:wechat/core/utils/prefrence_manager.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
+import 'package:wechat/features/chat/models/conversation.dart';
 import 'package:wechat/features/chat/screens/chat_screen.dart';
 import 'package:wechat/features/chat/widgets/user_avatar.dart';
 
 class ConversationListTile extends StatelessWidget {
-  const ConversationListTile({super.key});
+  final ConversationModel conversation;
+
+  const ConversationListTile({super.key, required this.conversation});
+
+  // String get _conversationDisplayPicture {
+  //   final currentUser = PreferenceManager.getUser();
+
+  //   if (conversation.isGroup!) {
+  //     return '';
+  //   } else {
+  //     return conversation.conversationMembers!
+  //             .firstWhere((member) => member!.id != conversation.currentUserId)!
+  //             .imageUrl ??
+  //         '';
+  //   }
+  // }
+
+  String get _conversationDisplayName {
+    final currentMember = PreferenceManager.getUser();
+    print(conversation.lastMessageAt);
+    final otherMember =
+        conversation.conversationMembers!
+            .where((member) => member!.id != currentMember!.id)
+            .first;
+
+    return '${otherMember!.firstName} ${otherMember.lastName}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +44,11 @@ class ConversationListTile extends StatelessWidget {
 
     return AppButton(
       onPressed: () {
-        navigator.pushNamed(ChatScreen.routeName);
+        navigator.push(
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(conversation: conversation),
+          ),
+        );
       },
       child: Container(
         height: context.h(64),
@@ -46,7 +78,7 @@ class ConversationListTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        'Darlene Steward',
+                        _conversationDisplayName,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: context.sp(14),

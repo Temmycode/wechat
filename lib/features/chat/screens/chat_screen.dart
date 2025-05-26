@@ -1,42 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/app_icons.dart';
 import 'package:wechat/core/utils/extensions.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
+import 'package:wechat/features/auth/controllers/providers/auth_notifier_provider.dart';
+import 'package:wechat/features/chat/models/conversation.dart';
 import 'package:wechat/features/chat/widgets/chat_app_bar.dart';
 import 'package:wechat/features/chat/widgets/chat_block.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends ConsumerStatefulWidget {
+  final ConversationModel? conversation;
   static const String routeName = "/conversation/chat";
 
-  const ChatScreen({super.key});
+  const ChatScreen({super.key, this.conversation});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends ConsumerState<ChatScreen> {
   late final TextEditingController _messageController;
+  late ConversationModel _conversation;
 
   @override
   void initState() {
     super.initState();
+    _conversation = widget.conversation!;
     _messageController = TextEditingController();
+  }
+
+  String get _conversationDisplayPicture {
+    final currentUser = ref.read(authNotifierProvider).user;
+
+    if (_conversation.isGroup!) {
+      return '';
+    } else {
+      final userOfDM = _conversation.conversationMembers!.firstWhere(
+        (member) => member!.id != currentUser!.id!,
+      );
+
+      return userOfDM!.imageUrl ?? '';
+    }
+  }
+
+  String get _conversationDisplayName {
+    if (_conversation.isGroup!) {
+      return _conversation.name!;
+    }
+    final currentMember = ref.read(authNotifierProvider).user;
+    final otherMember =
+        _conversation.conversationMembers!
+            .where((member) => member!.id != currentMember!.id)
+            .first;
+
+    return '${otherMember!.firstName} ${otherMember.lastName}';
   }
 
   @override
   Widget build(BuildContext context) {
-    final picture =
-        "https://c02.purpledshub.com/uploads/sites/40/2023/08/JI230816Cosmos220-6d9254f-edited-scaled.jpg?w=1029&webp=1";
     return Scaffold(
       backgroundColor: AppColors.offWhite,
 
       appBar: ChatAppBar(
         height: context.sp(73),
-        imageUrl: picture,
-        name: "Fullsnack Designers",
+        imageUrl: _conversationDisplayPicture,
+        name: _conversationDisplayName,
       ),
       body: Stack(
         children: [

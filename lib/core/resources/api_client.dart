@@ -47,6 +47,6 @@ class ApiClient {
   }
 
   Future<Response> getAllContactsAsWechatUsers(data) async {
-    return await dio.post('/wechat-users', data: data);
+    return await dio.post('/conversation/users', data: data);
   }
 }

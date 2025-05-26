@@ -28,7 +28,17 @@ class ConversationModel extends Equatable {
                 DateTime.parse(json['last_message_at']),
               )
               : null,
-      conversationMembers: json['conversation_members'],
+      conversationMembers:
+          json['conversation_members'] != null
+              ? List<UserModel?>.from(
+                json['conversation_members'].map((member) {
+                  if (member != null) {
+                    return UserModel.fromMap(member as Map<String, dynamic>);
+                  }
+                  return [];
+                }),
+              )
+              : [],
     );
   }
 
