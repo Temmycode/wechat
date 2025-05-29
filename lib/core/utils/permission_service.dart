@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
@@ -37,13 +36,10 @@ class PermissionService {
 
     if (permission != PermissionStatus.granted &&
         permission != PermissionStatus.permanentlyDenied) {
-      print('is granting request');
-
       // Request permission
       PermissionStatus permissionStatus = await Permission.contacts.request();
       return permissionStatus;
     } else {
-      print('is granted / permanently denied');
       return permission;
     }
   }

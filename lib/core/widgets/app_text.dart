@@ -15,7 +15,8 @@ class AppText extends StatelessWidget {
       text,
       textAlign: align,
       overflow: overflow,
-      style: GoogleFonts.plusJakartaSans(textStyle: style),
+      style: style,
+      // style: GoogleFonts.plusJakartaSans(textStyle: style),
     );
   }
 }

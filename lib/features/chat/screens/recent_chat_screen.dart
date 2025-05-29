@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wechat/config/theme/app_colors.dart';
-import 'package:wechat/core/resources/api_client.dart';
 import 'package:wechat/core/utils/app_icons.dart';
 import 'package:wechat/core/utils/app_navigator.dart';
 import 'package:wechat/core/utils/constants.dart';
@@ -9,9 +8,7 @@ import 'package:wechat/core/utils/extensions.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
-import 'package:wechat/features/chat/controller/notifiers/chat_notifier.dart';
 import 'package:wechat/features/chat/controller/providers/all_conversations_provider.dart';
-import 'package:wechat/features/chat/controller/providers/chat_notifier_provider.dart';
 import 'package:wechat/features/chat/screens/select_contact_screen.dart';
 import 'package:wechat/features/chat/widgets/chat_tab.dart';
 import 'package:wechat/features/chat/widgets/conversation_list_tile.dart';

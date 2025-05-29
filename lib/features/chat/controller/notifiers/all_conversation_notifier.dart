@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wechat/core/resources/api_client.dart';
 import 'package:wechat/features/chat/models/conversation.dart';
+import 'dart:developer' as dev;
 
 class AllConversationNotifier extends AsyncNotifier<List<ConversationModel>> {
   final ApiClient _apiClient = ApiClient();
@@ -18,11 +19,15 @@ class AllConversationNotifier extends AsyncNotifier<List<ConversationModel>> {
                 .map((conversation) => ConversationModel.fromJson(conversation))
                 .toList();
 
+        debugPrint('$conversations');
+
         return conversations;
       } else {
+        dev.log("Error is ${response.data}");
         return [];
       }
     } catch (err) {
+      dev.log("Error is $err");
       debugPrint(err.toString());
       return [];
     }

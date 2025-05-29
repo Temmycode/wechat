@@ -1,13 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:web_socket_channel/status.dart' as status;
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/app_icons.dart';
 import 'package:wechat/core/utils/extensions.dart';
+import 'package:wechat/core/utils/prefrence_manager.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/features/auth/controllers/providers/auth_notifier_provider.dart';
+import 'package:wechat/features/chat/controller/providers/conversation_message_provider.dart';
 import 'package:wechat/features/chat/models/conversation.dart';
+import 'package:wechat/features/chat/models/message.dart';
 import 'package:wechat/features/chat/widgets/chat_app_bar.dart';
 import 'package:wechat/features/chat/widgets/chat_block.dart';
 
@@ -22,14 +29,70 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
+  int lastSentMessageId = 1;
   late final TextEditingController _messageController;
   late ConversationModel _conversation;
+  late WebSocketChannel _webSocketChannel;
 
   @override
   void initState() {
     super.initState();
     _conversation = widget.conversation!;
     _messageController = TextEditingController();
+
+    _initializeWebsocket();
+  }
+
+  void _initializeWebsocket() async {
+    final token = PreferenceManager.getAccessToken();
+    final wsUrl = Uri.parse(
+      'ws://localhost:8000/ws/${_conversation.id}?token=$token',
+    );
+    _webSocketChannel = WebSocketChannel.connect(wsUrl);
+
+    await _webSocketChannel.ready;
+
+    _webSocketChannel.stream.listen(
+      (message) {
+        // TODO: save the message to cache
+      },
+      onError: (error) {
+        throw Exception(error);
+      },
+      onDone: () {
+        debugPrint("Websocket closed");
+      },
+    );
+  }
+
+  void _sendMessage(String content) {
+    final currentUser = ref.read(authNotifierProvider).user!;
+    final messageNotifier = ref.read(
+      conversationMessageNotifier(_conversation.id!).notifier,
+    );
+
+    // Create a message so because we can't rely on the message being sent
+    // this is because of latency
+    final message = MessageModel(
+      id: lastSentMessageId,
+      senderId: currentUser.id!,
+      conversationId: _conversation.id!,
+      content: content.trim(),
+      timestamp: DateTime.now(),
+      sender: currentUser,
+    );
+
+    // Add the created message to the list of existing messages
+    messageNotifier.addMessage(message);
+
+    // Now send the message through our websocket channel
+    _webSocketChannel.sink.add(jsonEncode({"content": content.trim()}));
+    // clear the controller
+    _messageController.clear();
+  }
+
+  void _setLastSentMessageId(int id) {
+    lastSentMessageId = id;
   }
 
   String get _conversationDisplayPicture {
@@ -61,6 +124,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // get the current user
+    final currentUser = ref.watch(authNotifierProvider).user!;
+    final conversationMessages = ref.watch(
+      conversationMessageNotifier(_conversation.id!),
+    );
+
     return Scaffold(
       backgroundColor: AppColors.offWhite,
 
@@ -72,16 +141,37 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       body: Stack(
         children: [
           Positioned(
-            child: ListView.builder(
-              padding: EdgeInsets.only(
-                top: context.h(23),
-                left: context.w(16),
-                right: context.w(16),
-              ),
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return ChatBlock(isUser: index.isOdd, message: "Hello world");
+            child: conversationMessages.when(
+              data: (messages) {
+                // get the last sent messages id
+                final id = messages.isEmpty ? 1 : messages.last.id;
+                _setLastSentMessageId(id);
+
+                // display a text if there are no messages yet
+                if (messages.isEmpty) {
+                  return Text("No messages yet").center();
+                }
+
+                // display the chat block widget if there are messages
+                return ListView.builder(
+                  padding: EdgeInsets.only(
+                    top: context.h(23),
+                    left: context.w(16),
+                    right: context.w(16),
+                  ),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
+
+                    return ChatBlock(
+                      isUser: message.senderId == currentUser.id!,
+                      message: message.content,
+                    );
+                  },
+                );
               },
+              error: (stk, err) => Text("An error occurred: $err"),
+              loading: () => CircularProgressIndicator(),
             ),
           ),
           Container(
@@ -109,6 +199,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   child: TextField(
                     controller: _messageController,
                     textCapitalization: TextCapitalization.sentences,
+                    onSubmitted: (content) {
+                      // check if the message is not empty
+                      // we don't want to be sending back empty messages
+                      if (content.isNotEmpty) {
+                        _sendMessage(content);
+                      }
+                    },
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: "Write a message",
@@ -157,6 +254,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   void dispose() {
     _messageController.dispose();
+    _webSocketChannel.sink.close();
     super.dispose();
   }
 }

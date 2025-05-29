@@ -49,4 +49,8 @@ class ApiClient {
   Future<Response> getAllContactsAsWechatUsers(data) async {
     return await dio.post('/conversation/users', data: data);
   }
+
+  Future<Response> loadConversationPreviousMessages(int conversationId) async {
+    return await dio.get('/conversation/$conversationId/messages');
+  }
 }

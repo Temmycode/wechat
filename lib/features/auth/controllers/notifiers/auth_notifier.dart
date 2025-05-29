@@ -57,7 +57,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> register({required UserModel user}) async {
     state = state.copy(isLoading: true, error: null);
     try {
-      final response = await _apiClient.register(user.toMap());
+      final response = await _apiClient.register(user.createUser());
       final data = response.data;
 
       if (response.statusCode == 201) {

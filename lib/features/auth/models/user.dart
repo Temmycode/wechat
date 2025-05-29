@@ -52,7 +52,6 @@ class UserModel extends Equatable {
       lastName: json['last_name'],
       mantra: json['mantra'],
       imageUrl: json['image_url'],
-      password: null,
       dateOfBirth:
           json['date_of_birth'] != null
               ? EquatableDateTime.fromDateTime(
@@ -63,6 +62,20 @@ class UserModel extends Equatable {
   }
 
   Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'username': username,
+      'email': email,
+      'phone_number': phoneNumber,
+      'first_name': firstName,
+      'last_name': lastName,
+      'image_url': imageUrl,
+      'mantra': mantra,
+      'date_of_birth': dateOfBirth?.toIso8601String(),
+    };
+  }
+
+  Map<String, dynamic> createUser() {
     return {
       'id': id,
       'username': username,

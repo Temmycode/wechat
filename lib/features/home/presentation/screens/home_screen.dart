@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/constants.dart';
 import 'package:wechat/core/utils/extensions.dart';
 import 'package:wechat/core/utils/size_config.dart';
+import 'package:wechat/features/chat/controller/providers/we_chat_contact_users_provider.dart';
 import 'package:wechat/features/home/presentation/providers/navigation_index_provider.dart';
 import 'package:wechat/features/home/presentation/widgets/navigation_bar_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   static const String routeName = '/home';
 
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(
+      weChatContactUsersProvider,
+    ); // instantiate the provider to load it's data
+
     return Scaffold(
       body: navigationIndexProvider.sync(
         builder: (context, value, _) {

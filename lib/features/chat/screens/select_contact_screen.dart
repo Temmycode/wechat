@@ -6,6 +6,7 @@ import 'package:wechat/core/widgets/app_button.dart';
 import 'package:wechat/core/widgets/app_text.dart';
 import 'package:wechat/features/auth/models/user.dart';
 import 'package:wechat/features/chat/controller/providers/chat_notifier_provider.dart';
+import 'package:wechat/features/chat/controller/providers/we_chat_contact_users_provider.dart';
 import 'package:wechat/features/chat/widgets/contact_tile.dart';
 
 class SelectContactScreen extends ConsumerWidget {
@@ -19,7 +20,7 @@ class SelectContactScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final applicationUsers = ref.watch(chatNotifierProvider).contactUsers;
+    final applicationUsers = ref.watch(weChatContactUsersProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -42,22 +43,29 @@ class SelectContactScreen extends ConsumerWidget {
           children: [
             context.sbH(10),
 
-            if (applicationUsers.isEmpty)
-              AppText("Nothing yet")
-            else
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: applicationUsers.length,
-                itemBuilder: (context, index) {
-                  final user = applicationUsers[index];
+            applicationUsers.when(
+              data: (users) {
+                if (users.isEmpty) {
+                  return AppText("Nothing yet");
+                }
 
-                  return ContactTile(
-                    onPressed: () => startConversation(ref, user),
-                    user: user,
-                  );
-                },
-              ),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final user = users[index];
+
+                    return ContactTile(
+                      onPressed: () => startConversation(ref, user),
+                      user: user,
+                    );
+                  },
+                );
+              },
+              loading: () => CircularProgressIndicator(),
+              error: (err, stk) => Text(err.toString()),
+            ),
           ],
         ),
       ),
