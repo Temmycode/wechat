@@ -50,7 +50,11 @@ class ApiClient {
     return await dio.post('/conversation/users', data: data);
   }
 
-  Future<Response> loadConversationPreviousMessages(int conversationId) async {
+  Future<Response> loadConversationPreviousMessages(
+    int conversationId, {
+    int? since,
+    int? limit,
+  }) async {
     return await dio.get('/conversation/$conversationId/messages');
   }
 }
