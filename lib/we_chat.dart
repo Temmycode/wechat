@@ -11,7 +11,6 @@ class WeChat extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // +2345554787672
     ref.watch(chatNotifierProvider); // call to initialize contacts
 
     return MaterialApp(

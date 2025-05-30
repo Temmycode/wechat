@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wechat/features/chat/models/message.dart';
 
 class DatabaseService {
-  final _box = Hive.box('mybox');
+  final _box = Hive.box('Wechat_Database');
 
   void addMessageToCache(MessageModel message) {
     var allMessagesinConversation = getAllMessage();
@@ -22,6 +22,9 @@ class DatabaseService {
 
   List<MessageModel> getAllMessage() {
     final encodedMessages = _box.get('MESSAGES');
+    if (encodedMessages == null) {
+      return [];
+    }
     final List messages = jsonDecode(encodedMessages);
     return messages.map((message) => MessageModel.fromMap(message)).toList();
   }

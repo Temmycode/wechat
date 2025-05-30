@@ -12,7 +12,7 @@ void main() async {
 
   await Hive.initFlutter();
 
-  var box = await Hive.openBox("mybox");
+  await Hive.openBox("Wechat_Database");
 
   runApp(const ProviderScope(child: WeChat()));
 }

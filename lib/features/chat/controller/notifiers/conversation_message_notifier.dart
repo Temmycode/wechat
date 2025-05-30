@@ -46,7 +46,11 @@ class ConversationMessageNotifier
   List<MessageModel> _loadMessgesFromLocalDb(int conversationId) {
     try {
       final messages = _dbService.getMessagesByConversationId(conversationId);
-      return messages..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+      print(messages);
+
+      return [];
+      // return messages..sort((a, b) => a.timestamp.compareTo(b.timestamp));
     } catch (err) {
       debugPrint("An error occurred: $err");
       return [];
