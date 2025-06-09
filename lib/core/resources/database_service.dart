@@ -1,32 +1,35 @@
-import 'dart:convert';
-
+import 'package:flutter/widgets.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:wechat/core/utils/equatable_date_time.dart';
 import 'package:wechat/features/chat/models/message.dart';
 
 class DatabaseService {
-  final _box = Hive.box('Wechat_Database');
+  final _box = Hive.box<MessageModel>('MessageBox');
 
   void addMessageToCache(MessageModel message) {
-    var allMessagesinConversation = getAllMessage();
-    allMessagesinConversation.add(message);
-    print(allMessagesinConversation);
-    _box.put('MESSAGES', allMessagesinConversation);
+    try {
+      final messageWithEquatableDate = message.copyWith(
+        timestamp: EquatableDateTime.fromDateTime(message.timestamp),
+      );
+      _box.add(messageWithEquatableDate);
+    } catch (err) {
+      debugPrint("Error adding message to cache: $err");
+    }
   }
 
   void addMessagesToCache(List<MessageModel> messages) {
-    var allMessagesinConversation = getAllMessage();
-    allMessagesinConversation.addAll(messages);
-    print(allMessagesinConversation);
-    _box.put('MESSAGES', allMessagesinConversation);
+    var messagesWithEquatableDate = messages.map(
+      (message) => message.copyWith(
+        timestamp: EquatableDateTime.fromDateTime(message.timestamp),
+      ),
+    );
+    _box.addAll(messagesWithEquatableDate);
   }
 
   List<MessageModel> getAllMessage() {
-    final encodedMessages = _box.get('MESSAGES');
-    if (encodedMessages == null) {
-      return [];
-    }
-    final List messages = jsonDecode(encodedMessages);
-    return messages.map((message) => MessageModel.fromMap(message)).toList();
+    final messages = _box.values.toList();
+
+    return messages;
   }
 
   List<MessageModel> getMessagesByConversationId(int conversationId) {

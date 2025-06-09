@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:web_socket_channel/status.dart' as status;
+// import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/app_icons.dart';
+import 'package:wechat/core/utils/equatable_date_time.dart';
 import 'package:wechat/core/utils/extensions.dart';
 import 'package:wechat/core/utils/prefrence_manager.dart';
 import 'package:wechat/core/utils/size_config.dart';
@@ -78,7 +79,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       senderId: currentUser.id!,
       conversationId: _conversation.id!,
       content: content.trim(),
-      timestamp: DateTime.now(),
+      timestamp: EquatableDateTime.fromDateTime(DateTime.now()),
       sender: currentUser,
     );
 
@@ -125,7 +126,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     // get the current user
-    final currentUser = ref.watch(authNotifierProvider).user!;
+    final currentUser = ref.watch(authNotifierProvider).user;
+    print("Current user is $currentUser");
     final conversationMessages = ref.watch(
       conversationMessageNotifier(_conversation.id!),
     );
@@ -134,7 +136,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       backgroundColor: AppColors.offWhite,
 
       appBar: ChatAppBar(
-        height: context.sp(73),
+        height: context.h(73),
         imageUrl: _conversationDisplayPicture,
         name: _conversationDisplayName,
       ),
@@ -164,7 +166,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     final message = messages[index];
 
                     return ChatBlock(
-                      isUser: message.senderId == currentUser.id!,
+                      isUser: message.senderId == currentUser?.id!,
                       message: message.content,
                     );
                   },

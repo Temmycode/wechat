@@ -6,10 +6,18 @@ class ApiClient {
   late final Dio dio;
   late final TokenManager tokenManager;
 
+  String baseUrl(bool isProduction) {
+    if (isProduction) {
+      return 'https://we-chat-api.onrender.com';
+    } else {
+      return 'http://127.0.0.1:8000';
+    }
+  }
+
   ApiClient() {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://127.0.0.1:8000',
+        baseUrl: baseUrl(false),
         contentType: 'application/json',
         validateStatus: (status) => status! < 500,
       ),
@@ -17,7 +25,7 @@ class ApiClient {
 
     tokenManager = TokenManager(dio: dio);
 
-    // Add interceptor after initialization
+    // Adding interceptor after initialization
     dio.interceptors.clear();
     dio.interceptors.add(AuthInterceptor(tokenManager: tokenManager, dio: dio));
   }
@@ -52,9 +60,12 @@ class ApiClient {
 
   Future<Response> loadConversationPreviousMessages(
     int conversationId, {
-    int? since,
+    String? since,
     int? limit,
   }) async {
-    return await dio.get('/conversation/$conversationId/messages');
+    return await dio.get(
+      '/conversation/$conversationId/messages',
+      queryParameters: {'since': since, 'limit': limit},
+    );
   }
 }

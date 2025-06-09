@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wechat/core/resources/api_client.dart';
 import 'package:wechat/core/resources/database_service.dart';
@@ -47,10 +46,7 @@ class ConversationMessageNotifier
     try {
       final messages = _dbService.getMessagesByConversationId(conversationId);
 
-      print(messages);
-
-      return [];
-      // return messages..sort((a, b) => a.timestamp.compareTo(b.timestamp));
+      return messages..sort((a, b) => a.timestamp.compareTo(b.timestamp));
     } catch (err) {
       debugPrint("An error occurred: $err");
       return [];
@@ -73,6 +69,7 @@ class ConversationMessageNotifier
       }
 
       final localMessages = _loadMessgesFromLocalDb(conversationId);
+      debugPrint("local message length: ${localMessages.length}");
       final lastLocalTimestamp =
           localMessages.isNotEmpty
               ? localMessages.last.timestamp
@@ -107,9 +104,10 @@ class ConversationMessageNotifier
     int limit = 50,
   }) async {
     try {
+      // get messages from load conversation previous messages from the server
       final response = await _apiClient.loadConversationPreviousMessages(
         messageId,
-        since: since?.millisecondsSinceEpoch,
+        since: since?.toIso8601String(),
         limit: limit,
       );
 
@@ -178,7 +176,7 @@ class ConversationMessageNotifier
 
     // Scheduling periodic sync: every 30 mins
     _synctimer = Timer.periodic(
-      30.seconds,
+      const Duration(minutes: 30),
       (timer) => syncMessages(conversationId),
     );
   }

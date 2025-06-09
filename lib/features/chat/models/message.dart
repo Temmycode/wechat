@@ -1,10 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:wechat/core/utils/equatable_date_time.dart';
 import 'package:wechat/features/auth/models/user.dart';
 
-// TODO: fix the issues with the message model into hive custom type
+part 'message.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 1)
 class MessageModel extends HiveObject with EquatableMixin {
   @HiveField(0)
   final int id;
@@ -15,7 +18,7 @@ class MessageModel extends HiveObject with EquatableMixin {
   @HiveField(3)
   final String content;
   @HiveField(4)
-  final DateTime timestamp;
+  final EquatableDateTime timestamp;
   @HiveField(5)
   final UserModel sender;
 
@@ -36,8 +39,10 @@ class MessageModel extends HiveObject with EquatableMixin {
       content: json['content'] as String,
       timestamp:
           json['timestamp'] != null
-              ? DateTime.parse(json['timestamp'])
-              : DateTime.now(),
+              ? EquatableDateTime.fromDateTime(
+                DateTime.parse(json['timestamp']),
+              )
+              : EquatableDateTime.fromDateTime(DateTime.now()),
       sender: UserModel.fromMap(json['sender']),
     );
   }
@@ -51,4 +56,22 @@ class MessageModel extends HiveObject with EquatableMixin {
     timestamp,
     sender,
   ];
+
+  MessageModel copyWith({
+    int? id,
+    int? senderId,
+    int? conversationId,
+    String? content,
+    EquatableDateTime? timestamp,
+    UserModel? sender,
+  }) {
+    return MessageModel(
+      id: id ?? this.id,
+      senderId: senderId ?? this.senderId,
+      conversationId: conversationId ?? this.conversationId,
+      content: content ?? this.content,
+      timestamp: timestamp ?? this.timestamp,
+      sender: sender ?? this.sender,
+    );
+  }
 }

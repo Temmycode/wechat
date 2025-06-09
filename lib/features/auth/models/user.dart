@@ -1,21 +1,35 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:wechat/core/utils/equatable_date_time.dart';
 
-class UserModel extends Equatable {
+part 'user.g.dart';
+
+@HiveType(typeId: 0)
+class UserModel extends HiveObject with EquatableMixin {
+  @HiveField(0)
   final int? id;
+  @HiveField(1)
   final String? username;
+  @HiveField(2)
   final String? email;
+  @HiveField(3)
   final String? phoneNumber;
+  @HiveField(4)
   final String? firstName;
+  @HiveField(5)
   final String? lastName;
+  @HiveField(6)
   final String? mantra;
+  @HiveField(7)
   final String? imageUrl;
+  @HiveField(8)
   final String? password;
+  @HiveField(9)
   final EquatableDateTime? dateOfBirth;
 
-  const UserModel({
+  UserModel({
     this.id,
     this.username,
     this.email,
