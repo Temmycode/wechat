@@ -34,13 +34,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
         AppNavigator.instance.navigateToPage(routeName: HomeScreen.routeName);
         final accessToken = data['access_token'];
         final refreshToken = data['refresh_token'];
-        final user = UserModel.fromMap(data['user']).toJson();
-        debugPrint(user.toString());
+        final user = UserModel.fromMap(data['user']);
 
         PreferenceManager.setAccessToken(accessToken);
         PreferenceManager.setRefreshToken(refreshToken);
-        PreferenceManager.setUser(user);
-        state = state.copy(isLoading: false, token: accessToken, error: null);
+        PreferenceManager.setUser(user.toJson());
+        state = state.copy(
+          isLoading: false,
+          user: user,
+          token: accessToken,
+          error: null,
+        );
       } else {
         final errorMessage = data['message'] ?? 'An error occurred';
         state = state.copy(isLoading: false, error: errorMessage);

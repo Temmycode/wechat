@@ -2,19 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/extensions.dart';
 import 'package:wechat/core/utils/formatter.dart';
+import 'package:wechat/core/utils/prefrence_manager.dart';
 import 'package:wechat/core/utils/size_config.dart';
 import 'package:wechat/core/widgets/app_text.dart';
+import 'package:wechat/features/chat/models/message.dart';
 import 'package:wechat/features/chat/widgets/user_avatar.dart';
 
 class ChatBlock extends StatelessWidget {
-  final bool isUser;
-  final String message;
+  final MessageModel message;
 
-  const ChatBlock({super.key, required this.isUser, required this.message});
+  const ChatBlock({super.key, required this.message});
+
+  bool get isUser {
+    final currentUser = PreferenceManager.getUser();
+    return message.senderId == currentUser?.id;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final date = DateFormatter.format(DateTime.now());
+    final date = DateFormatter.format(message.timestamp);
+
     return SizedBox(
       child: Row(
         mainAxisAlignment:
@@ -41,7 +48,7 @@ class ChatBlock extends StatelessWidget {
                         Container(
                           constraints: BoxConstraints(maxWidth: context.w(262)),
                           child: AppText(
-                            message,
+                            message.content,
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         ).right(),
@@ -85,7 +92,7 @@ class ChatBlock extends StatelessWidget {
                         Container(
                           constraints: BoxConstraints(maxWidth: context.w(262)),
                           child: AppText(
-                            message,
+                            message.content,
                             style: TextStyle(
                               color: AppColors.black800,
                               fontSize: 12,

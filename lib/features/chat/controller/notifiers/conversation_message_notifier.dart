@@ -20,6 +20,7 @@ class ConversationMessageNotifier
   Future<List<MessageModel>> build(int conversationId) async {
     // load the messages from local messages
     final localMessages = _loadMessgesFromLocalDb(conversationId);
+    debugPrint(localMessages.length.toString());
 
     // start background sync without blocking the flow
     _scheduleSync(conversationId);

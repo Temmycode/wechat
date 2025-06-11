@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:wechat/config/theme/app_colors.dart';
 import 'package:wechat/core/utils/app_icons.dart';
@@ -17,7 +16,7 @@ import 'package:wechat/features/chat/controller/providers/conversation_message_p
 import 'package:wechat/features/chat/models/conversation.dart';
 import 'package:wechat/features/chat/models/message.dart';
 import 'package:wechat/features/chat/widgets/chat_app_bar.dart';
-import 'package:wechat/features/chat/widgets/chat_block.dart';
+import 'package:wechat/features/chat/widgets/message_by_date_view.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final ConversationModel? conversation;
@@ -125,9 +124,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // get the current user
-    final currentUser = ref.watch(authNotifierProvider).user;
-    print("Current user is $currentUser");
+    // get the messages of the current conversation
     final conversationMessages = ref.watch(
       conversationMessageNotifier(_conversation.id!),
     );
@@ -154,23 +151,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   return Text("No messages yet").center();
                 }
 
-                // display the chat block widget if there are messages
-                return ListView.builder(
-                  padding: EdgeInsets.only(
-                    top: context.h(23),
-                    left: context.w(16),
-                    right: context.w(16),
-                  ),
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final message = messages[index];
-
-                    return ChatBlock(
-                      isUser: message.senderId == currentUser?.id!,
-                      message: message.content,
-                    );
-                  },
-                );
+                // Widget which handles the logic of display the chatblocks by their date
+                return MessageByDateView(messages: messages);
               },
               error: (stk, err) => Text("An error occurred: $err"),
               loading: () => CircularProgressIndicator(),

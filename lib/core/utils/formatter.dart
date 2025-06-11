@@ -32,6 +32,7 @@ class DateFormatter {
   /// Alternative format that allows customization of patterns
   static String formatCustom({
     required DateTime date,
+    bool useTodayText = false,
     String todayPattern = 'HH.mm',
     String yesterdayText = 'yesterday',
     String otherDaysPattern = 'MMMM d, HH.mm',
@@ -42,6 +43,10 @@ class DateFormatter {
     final dateOnly = DateTime(date.year, date.month, date.day);
 
     if (dateOnly.isAtSameMomentAs(today)) {
+      if (useTodayText) {
+        return "Today";
+      }
+
       return DateFormat(todayPattern).format(date);
     }
 

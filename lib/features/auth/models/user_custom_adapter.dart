@@ -1,12 +1,10 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
+// Custom class for handling the issues with the EquatableDateTime conversion
 
-part of 'user.dart';
+import 'package:hive/hive.dart';
+import 'package:wechat/core/utils/equatable_date_time.dart';
+import 'user.dart';
 
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
-
-class UserModelAdapter extends TypeAdapter<UserModel> {
+class UserModelCustomAdapter extends TypeAdapter<UserModel> {
   @override
   final int typeId = 0;
 
@@ -16,6 +14,17 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
+
+    // Handle the DateTime to EquatableDateTime conversion
+    EquatableDateTime? dateOfBirth;
+    if (fields[9] != null) {
+      if (fields[9] is DateTime) {
+        dateOfBirth = EquatableDateTime.fromDateTime(fields[9] as DateTime);
+      } else if (fields[9] is EquatableDateTime) {
+        dateOfBirth = fields[9] as EquatableDateTime;
+      }
+    }
+
     return UserModel(
       id: fields[0] as int?,
       username: fields[1] as String?,
@@ -26,7 +35,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       mantra: fields[6] as String?,
       imageUrl: fields[7] as String?,
       password: fields[8] as String?,
-      dateOfBirth: fields[9] as EquatableDateTime?,
+      dateOfBirth: dateOfBirth,
     );
   }
 
@@ -62,7 +71,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is UserModelAdapter &&
+      other is UserModelCustomAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
